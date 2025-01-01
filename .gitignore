@@ -2,6 +2,14 @@
 .venv/etc
 
 # Ignore Streamlit secrets
-Streamlit App/.streamlit/secrets.toml
+.streamlit/secrets.toml
 
+# Ignore virtual environment
+.venv/
+
+# Ignore IDE-specific files
+.idea/
+
+# Ignore Exercise Git repository (if not needed)
+Exercise_Git_Repository/
 
