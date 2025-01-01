@@ -37,7 +37,9 @@ def fetch_data(sheet_name, range_name):
     data = result.get('values', [])
     if data:
         header = data[0]
-        rows = [row + [None] * (len(header) - len(row)) for row in data[1:]]  # Normalize row lengths
+        # Ensures each row has the same number
+        # of elements as the header by appending None values for any missing columns.
+        rows = [row + [None] * (len(header) - len(row)) for row in data[1:]]
         return pd.DataFrame(rows, columns=header)
     else:
         return pd.DataFrame()  # Return an empty DataFrame if no data
@@ -67,7 +69,7 @@ else:
     print("Not all values are datetime")
 
 
-# Set Duration as numberic
+# Set Duration as numeric
 filtered_df['Duration'] = pd.to_numeric(filtered_df['Duration'], errors="coerce")
 
 # Set Distance as numeric
@@ -77,7 +79,6 @@ filtered_df['Distance in Miles'] = pd.to_numeric(filtered_df['Distance in Miles'
 # Set number of reps as numeric
 filtered_df = filtered_df.rename(columns={'Optional: Strength: Reps': 'Reps'})
 filtered_df['Reps'] = pd.to_numeric(filtered_df['Reps'], errors="coerce")
-
 
 # Set exercise types
 all_exercise_types = [
