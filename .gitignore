@@ -4,5 +4,4 @@
 # Ignore Streamlit secrets
 Streamlit App/.streamlit/secrets.toml
 
-# Ignore IDE-specific files (optional)
-.idea/
+
