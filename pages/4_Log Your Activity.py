@@ -70,7 +70,7 @@ filtered_df = raw_form_df.copy()
 
 # Exercise Type Question
 person_input = st.radio(
-    "Who are you?",
+    "Who are you?*",
     ["Tom C",
      "Pete C"],
     index=None,
@@ -88,7 +88,7 @@ activity_options = [
 
 # Exercise Type Question
 exercise_type_input = st.selectbox(
-    "Which activity have you completed?",
+    "Which activity have you completed?*",
     activity_options,
     index=None,
     placeholder="Please select an activity.",
@@ -123,7 +123,7 @@ mood_options = {
 
 # Wrap the columns within a container to maintain position
 with st.container():
-    st.markdown("### Mood Prior to Exercising")  # Section Title
+    st.markdown("### Mood Prior to Exercising*")  # Section Title
 
     # Create columns
     left_column, right_column = st.columns(2)
@@ -148,7 +148,7 @@ with st.container():
         )
 
 weather_input = st.selectbox(
-    "What was the weather like during your activity?",
+    "What was the weather like during your activity?*",
     (
         "Sunny",
         "Partly Cloudy",
@@ -169,7 +169,7 @@ st.write("--------")
 
 
 duration_input = st.slider(
-    "How long were you active for?",
+    "How long were you active for?*",
     min_value=0,
     max_value=400,
     step=15,
@@ -223,7 +223,7 @@ st.write("--------")
 
 # Create a select slider
 intensity_selected = st.select_slider(
-    "Select the perceived intensity of your workout:",
+    "Select the perceived intensity of your workout*:",
     options=list(intensity_mapping.keys()),  # Display words to the user
     value="Moderate",  # Default value,
     key="perceived_intensity_question",
@@ -246,7 +246,7 @@ mood_options = {
 
 # Wrap the "Mood After Exercising" section in a container
 with st.container():
-    st.markdown("### Mood After Exercising")  # Section Title
+    st.markdown("### Mood After Exercising*")  # Section Title
 
     # Create columns for layout
     left_column, right_column = st.columns(2)
@@ -289,7 +289,7 @@ exercise_tags = "N/A"
 
 if st.button("Log your activity!!"):
     # Validate required fields
-    #if exercise_type_input and mood_prior_num_input and weather_input and duration_input:
+    if person_input and exercise_type_input and mood_prior_num_input and weather_input and duration_input and intensity_numeric and mood_after_num_input:
         # Collect data for all columns
         values = [
             datetime.now().strftime("%d/%m/%Y %H:%M:%S"),  # Timestamp
@@ -302,7 +302,7 @@ if st.button("Log your activity!!"):
             part_of_body_input,  # Part of body
             reps_input,  # Individual reps completed
             intensity_numeric,  # Perceived intensity of the workout
-            mood_prior_num_input,  # Mood prior to workout (numeric)
+            mood_after_num_input,  # Mood prior to workout (numeric)
             mood_after_text_input,  # Mood after workout (text)
             exercise_tags,  # Will likely delete later
             notes_input,  # Anything else useful
@@ -315,6 +315,6 @@ if st.button("Log your activity!!"):
             st.success("Data saved successfully!")
         except Exception as e:
             st.error(f"Failed to save data: {e}")
-   # else:
+    else:
         st.error("Please fill in all required fields.")
 
