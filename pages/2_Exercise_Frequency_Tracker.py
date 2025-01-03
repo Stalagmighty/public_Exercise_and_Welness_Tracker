@@ -44,7 +44,7 @@ def fetch_data(sheet_name, range_name):
         return pd.DataFrame()  # Return an empty DataFrame if no data
 
 # Read data for Raw Form Responses
-raw_form_df = fetch_data("Raw_Form_Responses", "A1:N1000")  # Adjust range as needed
+raw_form_df = fetch_data("Raw_Form_Responses", "A1:R1000")  # Adjust range as needed
 
 # Read data for Inspirational Quotes (optional)
 inspirational_quotes_df = fetch_data("Inspirational_Quotes", "A1:C100")  # Adjust range as needed

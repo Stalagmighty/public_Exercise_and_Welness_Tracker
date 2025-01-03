@@ -45,8 +45,12 @@ def fetch_data(sheet_name, range_name):
         return pd.DataFrame()  # Return an empty DataFrame if no data
 
 # Read data for Raw Form Responses
-raw_form_df = fetch_data("Raw_Form_Responses", "A1:N1000")
+raw_form_df = fetch_data("Raw_Form_Responses", "A1:R1000")
 filtered_df = raw_form_df.copy()
+
+# Read data for users
+user_df = fetch_data("App_Users", "A1:B1000")  # Adjust range as needed
+filtered_user_df = user_df.copy()
 
 # Read data for Inspirational Quotes
 inspirational_quotes_df = fetch_data("Inspirational_Quotes", "A1:C100")
@@ -99,18 +103,64 @@ filtered_inspirational_quotes_df['Number'] = pd.to_numeric(filtered_inspirationa
 
 # Select and display random quote
 if not filtered_inspirational_quotes_df.empty:
-
     random_quote = filtered_inspirational_quotes_df.sample().iloc[0]
-
     quote_text = random_quote['Quote']
     quote_author = random_quote['Author']
 
-    st.markdown(f"<h4 style='font-size:32px; text-align:left;'>&ldquo;{quote_text}&rdquo;</h4>", unsafe_allow_html=True)
-    st.markdown(f"<h5 style='text-align:left; color:gray;'>— {quote_author}</h3>", unsafe_allow_html=True)
+    # Display quote
+    st.markdown(
+        f"<h4 style='font-size:32px; text-align:left;'>&ldquo;{quote_text}&rdquo;</h4>",
+        unsafe_allow_html=True
+    )
+    st.markdown(
+        f"<h5 style='text-align:left; color:gray;'>— {quote_author}</h5>",
+        unsafe_allow_html=True
+    )
 else:
     st.write("No quotes available to display.")
 
-# top-level filters
+st.write("----")
+
+# Filters Section
+
+# Filters Section
+with st.container():
+    # Define two columns: left for exercise filter, right for user filter
+    left_column, right_column = st.columns([1, 1])  # Equal-width columns; adjust as needed
+
+    # Exercise Type Filter in the Left Column
+    with left_column:
+        exercise_types = ["All Exercise Types"] + all_exercise_types
+        exercise_type_filter = st.selectbox(
+            "Select the Exercise Type",
+            exercise_types,
+            index=0
+        )
+
+        # Filter DataFrame by Exercise Type
+        if exercise_type_filter != "All Exercise Types":
+            filtered_df = filtered_df[filtered_df["Exercise Type"] == exercise_type_filter]
+
+    # User Filter in the Right Column
+    with right_column:
+        dynamic_users = filtered_user_df.iloc[1].unique()
+        app_users_plus_all = ["All app users"] + list(dynamic_users)
+
+        app_user_filter = st.multiselect(
+            "Select which users to filter by.",
+            options=app_users_plus_all,
+            default="All app users"
+        )
+
+        # Filter DataFrame by Users
+        if "All app users" in app_user_filter:
+            # If "All App Users" is selected, show all data
+            filtered_df = filtered_df
+        else:
+            # Filter for specific users
+            filtered_df = filtered_df[filtered_df["User"].isin(app_user_filter)]
+
+
 
 # Date Range Picker and week filter
 
@@ -217,15 +267,6 @@ else:
 
 # Filter the dataframe by exercise
 
-# Add "All Exercise Types" to the filter options
-exercise_types = ["All Exercise Types"] + all_exercise_types
-exercise_type_filter = st.selectbox("Select the Exercise Type", exercise_types, index=0)
-
-if exercise_type_filter != "All Exercise Types":
-    filtered_df = filtered_df[filtered_df["Exercise Type"] == exercise_type_filter]
-
-# Identify missing exercise types (those not in the dataframe)
-missing_exercises = set(all_exercise_types) - set(filtered_df["Exercise Type"])
 
 # ------ Visualisations --------------------------------------------
 
