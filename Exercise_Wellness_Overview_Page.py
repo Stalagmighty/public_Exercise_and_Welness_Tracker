@@ -143,7 +143,7 @@ with st.container():
 
     # User Filter in the Right Column
     with right_column:
-        dynamic_users = filtered_user_df.iloc[1].unique()
+        dynamic_users = filtered_user_df.iloc[:, 1].unique()
         app_users_plus_all = ["All app users"] + list(dynamic_users)
 
         app_user_filter = st.multiselect(
