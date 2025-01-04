@@ -81,19 +81,22 @@ for key, default in session_state_defaults.items():
 # Form inputs
 left_column, right_column = st.columns(2)
 
-with left_column:
-    st.session_state.selected_person = st.radio(
-        "Who are you?*",
-        dynamic_users,
-        index=None,
-        key="person_question"
-    )
+with st.container():
+    with left_column:
+        st.session_state.selected_person = st.radio(
+            "Who are you?*",
+            dynamic_users,
+            index=None,
+            key="person_question"
+            )
 
-st.session_state.date_exercised = st.date_input(
-    "Which date did you exercise?",
-    value=st.session_state.date_exercised,
-    key="date_exercised_question"
-)
+with st.container():
+    with right_column:
+        st.session_state.date_exercised = st.date_input(
+            "Which date did you exercise?",
+            value=st.session_state.date_exercised,
+            key="date_exercised_question"
+        )
 
 selected_datetime = datetime.combine(st.session_state.date_exercised, datetime.now().time())
 formatted_datetime = selected_datetime.strftime("%d/%m/%Y %H:%M:%S")
