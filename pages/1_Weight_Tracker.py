@@ -116,8 +116,21 @@ filtered_weight_data = filtered_weight_data.sort_values('Timestamp')
 
 # Current weight input
 
+# Weight checkbox behaviour
+current_weight_checkbox = st.checkbox(
+    "Log current weight",
+    key="current_weight_checkbox",
+    disabled=st.session_state.get("target_weight_checkbox", False)  # Disabled if the other checkbox is checked
+)
+
+target_weight_checkbox = st.checkbox(
+    "Set target weight",
+    key="target_weight_checkbox",
+    disabled=current_weight_checkbox  # Disabled if current_weight_checkbox is checked
+)
+
 # Checkbox to toggle log activity functionality
-if st.checkbox("Log current weight"):
+if current_weight_checkbox:
     # Create a container for better organization
     with st.container():
         # Split layout into two columns
@@ -147,8 +160,8 @@ if st.checkbox("Log current weight"):
                 # Collect data for all columns
                 values = [
                     datetime.now().strftime("%d/%m/%Y %H:%M:%S"),  # Timestamp
-                    current_user[0] if current_user else "",        # Assuming single selection
                     current_weight_input,
+                    current_user[0] if current_user else "",  # Assuming single selection
                 ]
 
                 # Try to save the data
@@ -161,6 +174,62 @@ if st.checkbox("Log current weight"):
                 st.error("Please fill in all required fields.")
 
 # Target weight input
+
+# Checkbox to toggle log activity functionality
+if target_weight_checkbox:
+    # Create a container for better organization
+    with st.container():
+        # Split layout into two columns
+        col1, col2 = st.columns(2)
+
+        # User selection in the left column
+        with col1:
+            app_user_selector_for_input = st.multiselect(
+                "Select which app user you are from the list.",
+                options=dynamic_users,
+                placeholder="Select from list.",
+                key="User Selector For Input2",
+            )
+            current_user = app_user_selector_for_input
+
+        # Weight input in the right column
+        with col2:
+            target_weight_input = st.text_input(
+                "What is your target weight in kg?",
+                placeholder="Please enter your target weight using only numbers."
+            )
+
+        # Target date input in the right column
+        with col2:
+            target_date = st.date_input(
+                "Which date would you like to reach your target weight by?",
+                datetime.today().date() + timedelta(90),
+                min_value=datetime.today(),
+                key="target_date_question"
+
+            )
+
+        # Submit button centered below both columns
+        if st.button("Log your target weight."):
+            # Validate required fields
+            if current_user and current_weight_input and target_date:
+                # Collect data for all columns
+                values = [
+                    datetime.now().strftime("%d/%m/%Y %H:%M:%S"),  # Timestamp
+                    current_user[0] if current_user else "",  # Assuming single selection
+                    target_weight_input,
+                    target_date.strftime("%d/%m/%Y %H:%M:%S"),
+
+                ]
+
+                # Try to save the data
+                try:
+                    append_data("Weight_Tracker", values)  # Replace "Weight_Tracker" with your sheet name
+                    st.success("Data saved successfully!")
+                except Exception as e:
+                    st.error(f"Failed to save data: {e}")
+            else:
+                st.error("Please fill in all required fields.")
 
 
 
