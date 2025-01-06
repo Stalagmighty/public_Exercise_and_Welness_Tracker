@@ -21,6 +21,23 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# Apply theme programmatically
+st.markdown(
+    """
+    <style>
+    :root {
+        --primary-color: #1f77b4;
+        --background-color: #0e1117;
+        --secondary-background-color: #262730;
+        --text-color: #fafafa;
+        --font: 'sans serif';
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+
 # Authenticate with the Google Sheets API
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
 credentials = Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=SCOPES)
